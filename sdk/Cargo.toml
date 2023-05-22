@@ -1,5 +1,5 @@
 [package]
-name = "notion-sdk"
+name = "notion-flows"
 version = "0.1.0"
 edition = "2021"
 
