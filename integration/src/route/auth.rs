@@ -26,7 +26,7 @@ pub async fn auth(
         .json(&serde_json::json!({
             "grant_type": "authorization_code",
             "code": code,
-            "redirect_uri": "https://github.purejs.icu/auth",
+            "redirect_uri": "https://flows.purejs.icu/auth",
         }))
         .send()
         .await;

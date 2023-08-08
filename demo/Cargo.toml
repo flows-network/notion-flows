@@ -1,0 +1,13 @@
+[package]
+name = "demo"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+path = "src/lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+notion-flows = { path = "../sdk" }
+tg-flows = "0.2.3"
+tokio_wasi = { version = "1.25", features = ["rt", "macros"] }
