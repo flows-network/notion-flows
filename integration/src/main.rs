@@ -1,3 +1,4 @@
+use crate::route::static_path;
 use crate::route::{auth, connected, event, listen, revoke};
 
 use std::sync::Arc;
@@ -6,6 +7,7 @@ use axum::{
     routing::{get, post},
     Router,
 };
+use include_dir::{include_dir, Dir};
 use shared::get_client;
 
 use poll::poll;
@@ -19,6 +21,8 @@ mod shared;
 mod state;
 
 const HOOK_URL: &str = "https://code.flows.network/hook/notion/message";
+
+static STATIC_DIR: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/static");
 
 const REDIRECT_URL: &str = "https://flows.network";
 const CLIENT_ID: &str = "1025ce97-c5dc-4c37-bba6-fe4801db5e0e";
@@ -37,6 +41,7 @@ async fn main() {
         .route("/event/:database", get(event))
         .route("/connected/:flows_user", get(connected))
         .route("/auth", get(auth))
+        .route("/static/*path", get(static_path))
         .with_state(state);
 
     axum::Server::bind(&"0.0.0.0:6870".parse().unwrap())

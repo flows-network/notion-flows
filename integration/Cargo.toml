@@ -25,6 +25,8 @@ chrono = "0.4.24"
 env_logger = { version = "0.10.0", optional = true}
 
 notion = { version = "0.5.2", package = "notion-wasi" }
+include_dir = "0.7.3"
+mime_guess = "2.0.4"
 
 [features]
 debug = ["env_logger"]
