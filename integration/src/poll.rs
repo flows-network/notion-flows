@@ -81,7 +81,7 @@ async fn post_message(token: String, database: String) {
         let client = get_client();
 
         for page in page_list.results() {
-            _ = client.post(HOOK_URL).json(&page).send().await;
+            _ = client.post(HOOK_URL.as_str()).json(&page).send().await;
         }
     }
 }

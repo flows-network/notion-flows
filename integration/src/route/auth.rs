@@ -22,11 +22,11 @@ pub async fn auth(
 
     let resp = client
         .post(url)
-        .basic_auth(CLIENT_ID, Some(CLIENT_SECRET))
+        .basic_auth(CLIENT_ID.as_str(), Some(CLIENT_SECRET.as_str()))
         .json(&serde_json::json!({
             "grant_type": "authorization_code",
             "code": code,
-            "redirect_uri": "https://flows.purejs.icu/auth",
+            "redirect_uri": REDIRECT_URL.as_str(),
         }))
         .send()
         .await;
@@ -56,7 +56,7 @@ pub async fn auth(
                 .await
                 .map_err(|e| e.to_string())?;
 
-            Ok(Redirect::to(REDIRECT_URL))
+            Ok(Redirect::to("https://flows.network/integration/Notion"))
         }
         Err(e) => Err(e.to_string()),
     }

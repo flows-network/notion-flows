@@ -978,6 +978,7 @@ dependencies = [
  "env_logger",
  "futures",
  "include_dir",
+ "lazy_static",
  "mime_guess",
  "notion-wasi",
  "once_cell",

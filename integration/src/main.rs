@@ -20,17 +20,18 @@ mod route;
 mod shared;
 mod state;
 
-const HOOK_URL: &str = "https://code.flows.network/hook/notion/message";
-
 static STATIC_DIR: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/static");
 
-const REDIRECT_URL: &str = "https://flows.network";
-const CLIENT_ID: &str = "1025ce97-c5dc-4c37-bba6-fe4801db5e0e";
+const POLLING_INTERVAL_SECS: i64 = 60;
+const POST_INTERVAL_SECS: u64 = 1;
 
-const POLLING_INTERVAL_SECS: i64 = 100;
-const POST_INTERVAL_SECS: u64 = 3;
-
-const CLIENT_SECRET: &str = env!("CLIENT_SECRET");
+lazy_static::lazy_static! {
+    static ref HOOK_URL: String =
+        std::env::var("PLATFORM_HOOK_URL").unwrap_or(String::from("https://code.flows.network/hook/notion/message"));
+    static ref CLIENT_ID: String = std::env::var("NOTION_APP_CLIENT_ID").unwrap();
+    static ref CLIENT_SECRET: String = std::env::var("NOTION_APP_CLIENT_SECRET").unwrap();
+    static ref REDIRECT_URL: String = std::env::var("NOTION_OAUTH_REDIRECT_URL").unwrap();
+}
 
 #[tokio::main]
 async fn main() {
@@ -45,7 +46,7 @@ async fn main() {
         .route("/static/*path", get(static_path))
         .with_state(state);
 
-    axum::Server::bind(&"0.0.0.0:6870".parse().unwrap())
+    axum::Server::bind(&"0.0.0.0:6970".parse().unwrap())
         .serve(app.into_make_service())
         .await
         .unwrap();

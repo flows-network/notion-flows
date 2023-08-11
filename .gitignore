@@ -4,3 +4,5 @@
 **/target/
 
 ./notion-integration/Cargo.lock
+
+.cargo
