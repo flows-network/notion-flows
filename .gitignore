@@ -5,4 +5,4 @@
 
 ./notion-integration/Cargo.lock
 
-.cargo
+**/.cargo/

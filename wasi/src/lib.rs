@@ -1,7 +1,10 @@
 use http_req::request;
 use serde::Deserialize;
 
-const GH_API_PREFIX: &str = "https://github.purejs.icu";
+lazy_static::lazy_static! {
+    static ref NOTION_API_PREFIX: String =
+        std::env::var("NOTION_API_PREFIX").unwrap_or(String::from("https://notion.flows.network"));
+}
 
 extern "C" {
     fn get_event_body_length() -> i32;
@@ -20,8 +23,11 @@ pub unsafe fn message() {
         let database = q.id;
 
         let mut writer = Vec::new();
-        let res =
-            request::get(format!("{}/event/{}", GH_API_PREFIX, database), &mut writer).unwrap();
+        let res = request::get(
+            format!("{}/event/{}", NOTION_API_PREFIX.as_str(), database),
+            &mut writer,
+        )
+        .unwrap();
 
         if res.status_code().is_success() {
             if let Ok(flows) = String::from_utf8(writer) {
