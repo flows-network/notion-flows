@@ -62,7 +62,6 @@ async fn init() -> AppState {
 
     let s_pool = pool.clone();
     tokio::spawn(async move {
-        println!("start polling...");
         poll(&s_pool).await;
     });
 

@@ -28,7 +28,6 @@ pub async fn poll(pool: &PgPool) {
     let mut post_interval = interval(std::time::Duration::from_secs(POST_INTERVAL_SECS));
 
     loop {
-        println!("poll it.");
         poll_interval.tick().await;
 
         let select_token = "
