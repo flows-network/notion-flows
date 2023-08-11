@@ -12,6 +12,8 @@
 
 ## Quick Start
 
+### Listen
+
 This is a changed database forward (to telegram) bot.
 
 ```rust
@@ -56,3 +58,18 @@ where
 
 [listen_to_event()] is responsible for registering a listener for the database.
 When a new `database` changes (as `page`) coming, the callback is called with received `Message`.
+
+### Action
+
+```rust
+    use std::str::FromStr;
+    use notion_flows::notion::{ids::PageId, NotionApi};
+
+    let notion = NotionApi::new("API_TOKEN").unwrap();
+    let page_id = PageId::from_str("PAGE_ID").unwrap();
+    let page = notion.get_page(page_id).await;
+```
+
+Action as [NotionApi](https://docs.rs/notion-wasi/0.5.2/notion_wasi/struct.NotionApi.html).
+
+ref: [Notion API Reference](https://developers.notion.com/reference/intro)
