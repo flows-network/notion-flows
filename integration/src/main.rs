@@ -28,6 +28,7 @@ const REDIRECT_URL: &str = "https://flows.network";
 const CLIENT_ID: &str = "1025ce97-c5dc-4c37-bba6-fe4801db5e0e";
 
 const POLLING_INTERVAL_SECS: i64 = 100;
+const POST_INTERVAL_SECS: u64 = 3;
 
 const CLIENT_SECRET: &str = env!("CLIENT_SECRET");
 

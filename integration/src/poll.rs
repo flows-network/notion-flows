@@ -1,6 +1,6 @@
 use std::str::FromStr;
 
-use chrono::{Duration, Utc};
+use chrono::Utc;
 use futures::StreamExt;
 use notion::{
     ids::DatabaseId,
@@ -12,7 +12,7 @@ use tokio::time::interval;
 
 use crate::{
     shared::{get_client, get_polling_interval},
-    HOOK_URL,
+    HOOK_URL, POST_INTERVAL_SECS,
 };
 
 #[derive(sqlx::FromRow, Debug)]
@@ -25,7 +25,7 @@ pub async fn poll(pool: &PgPool) {
     let dura = get_polling_interval().to_std().unwrap();
     let mut poll_interval = interval(dura);
 
-    let mut post_interval = interval(std::time::Duration::from_secs(3));
+    let mut post_interval = interval(std::time::Duration::from_secs(POST_INTERVAL_SECS));
 
     loop {
         println!("poll it.");
@@ -59,7 +59,8 @@ pub async fn poll(pool: &PgPool) {
 
 async fn post_message(token: String, database: String) {
     let now = Utc::now();
-    let world_before_100s = now - Duration::seconds(100);
+    let dura = get_polling_interval();
+    let world_before_dura = now - *dura;
 
     let notion = NotionApi::new(token).unwrap();
 
@@ -68,7 +69,7 @@ async fn post_message(token: String, database: String) {
         filter: Some(FilterCondition::Timestamp {
             timestamp: "last_edited_time".to_string(),
             condition: TimestampCondition::LastEditedTime(DateCondition::OnOrAfter(
-                world_before_100s,
+                world_before_dura,
             )),
         }),
         paging: None,
