@@ -45,6 +45,12 @@ pub async fn auth(
             let sql = "
                 INSERT INTO bot(bot_id, flows_user, token, workspace_id, workspace_name)
                 VALUES ($1, $2, $3, $4, $5)
+                ON CONFLICT (bot_id)
+                DO
+                UPDATE SET flows_user = EXCLUDED.flows_user,
+                token = EXCLUDED.token,
+                workspace_id = EXCLUDED.workspace_id,
+                workspace_name = EXCLUDED.workspace_name
             ";
             let _query_result = sqlx::query(sql)
                 .bind(bot_id)

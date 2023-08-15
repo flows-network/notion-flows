@@ -6,7 +6,7 @@ use std::future::Future;
 use notion::models::Page;
 pub use notion_wasi as notion;
 
-const API_PREFIX: &str = "https://flows.purejs.icu";
+const API_PREFIX: &str = "https://notion.flows.network";
 
 extern "C" {
     // Flag if current running is for listening(1) or message receving(0)
@@ -40,50 +40,14 @@ unsafe fn _get_flow_id() -> String {
     String::from_utf8(flow_id).unwrap()
 }
 
-/// Revoke previous registered listener of current flow.
-///
-/// Most of the time you do not need to call this function. As inside
-/// the [listen_to_event()] it will revoke previous registered
-/// listener, so the only circumstance you need this function is when
-/// you want to change the listener from GitHub to others.
-pub fn revoke_listeners<S: AsRef<str>>(database: S) {
-    unsafe {
-        let flows_user = _get_flows_user();
-        let flow_id = _get_flow_id();
-
-        let mut writer = Vec::new();
-        let res = request::get(
-            format!(
-                "{}/{}/{}/revoke?database={}",
-                API_PREFIX,
-                flows_user,
-                flow_id,
-                database.as_ref(),
-            ),
-            &mut writer,
-        )
-        .unwrap();
-
-        match res.status_code().is_success() {
-            true => (),
-            false => {
-                set_error_log(writer.as_ptr(), writer.len() as i32);
-            }
-        }
-    }
-}
-
 #[allow(rustdoc::bare_urls)]
-/// Create a listener for *https://github.com/`owner`/`repo`*.
+/// Create a listener for modification of `database`.
 ///
 /// If you have not install
 /// [Flows.network platform](https://test.flows.network)'s app to your GitHub,
 /// you will receive an error in the flow's building log or running log.
 ///
-/// Before creating the listener, this function will revoke previous
-/// registered listener of current flow so you don't need to do it manually.
-///
-/// `callback` is a callback function which will be called when new `Event` is received.
+/// `callback` is a callback function which will be called with the [Page](https://docs.rs/notion-wasi/latest/notion_wasi/models/struct.Page.html) object.
 pub async fn listen_to_event<S, F, Fut>(database: S, callback: F)
 where
     S: AsRef<str>,

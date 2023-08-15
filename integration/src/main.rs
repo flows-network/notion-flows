@@ -1,5 +1,5 @@
 use crate::route::static_path;
-use crate::route::{auth, connected, event, listen, revoke};
+use crate::route::{access, auth, connected, event, listen, revoke};
 
 use std::sync::Arc;
 
@@ -43,6 +43,7 @@ async fn main() {
         .route("/event/:database", get(event))
         .route("/connected/:flows_user", get(connected))
         .route("/auth", get(auth))
+        .route("/access/:flows_user", get(access))
         .route("/static/*path", get(static_path))
         .with_state(state);
 
