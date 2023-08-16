@@ -2,8 +2,8 @@ use http_req::request;
 use serde::Deserialize;
 
 lazy_static::lazy_static! {
-    static ref NOTION_API_PREFIX: String =
-        std::env::var("NOTION_API_PREFIX").unwrap_or(String::from("https://notion.flows.network"));
+    static ref NOTION_API_PREFIX: String = String::from(
+        std::option_env!("NOTION_API_PREFIX").unwrap_or("https://notion.flows.network"));
 }
 
 extern "C" {
@@ -12,19 +12,28 @@ extern "C" {
     fn set_flows(p: *const u8, len: i32);
 }
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 struct Query {
-    id: String, // database id
+    parent: Parent,
+}
+
+#[derive(Debug, Deserialize)]
+struct Parent {
+    database_id: String,
 }
 
 #[no_mangle]
 pub unsafe fn message() {
     if let Some(q) = query_from_subcription() {
-        let database = q.id;
+        let database = q.parent.database_id;
 
         let mut writer = Vec::new();
         let res = request::get(
-            format!("{}/event/{}", NOTION_API_PREFIX.as_str(), database),
+            format!(
+                "{}/event/{}",
+                NOTION_API_PREFIX.as_str(),
+                database.replace("-", "")
+            ),
             &mut writer,
         )
         .unwrap();

@@ -12,7 +12,7 @@ use tokio::time::interval;
 
 use crate::{
     shared::{get_client, get_polling_interval},
-    HOOK_URL, POST_INTERVAL_SECS,
+    HOOK_URL,
 };
 
 #[derive(sqlx::FromRow, Debug)]
@@ -24,8 +24,6 @@ struct Poll {
 pub async fn poll(pool: &PgPool) {
     let dura = get_polling_interval().to_std().unwrap();
     let mut poll_interval = interval(dura);
-
-    let mut post_interval = interval(std::time::Duration::from_secs(POST_INTERVAL_SECS));
 
     loop {
         poll_interval.tick().await;
@@ -49,7 +47,6 @@ pub async fn poll(pool: &PgPool) {
 
         while let Some(res) = stream.next().await {
             if let Ok(Poll { token, database }) = res {
-                post_interval.tick().await;
                 post_message(token, database).await;
             }
         }

@@ -6,7 +6,11 @@ use std::future::Future;
 use notion::models::Page;
 pub use notion_wasi as notion;
 
-const API_PREFIX: &str = "https://notion.flows.network";
+lazy_static::lazy_static! {
+    static ref API_PREFIX: String = String::from(
+        std::option_env!("NOTION_API_PREFIX").unwrap_or("https://notion.flows.network")
+    );
+}
 
 extern "C" {
     // Flag if current running is for listening(1) or message receving(0)
@@ -65,7 +69,7 @@ where
                 let res = request::get(
                     format!(
                         "{}/{}/{}/listen?database={}",
-                        API_PREFIX,
+                        API_PREFIX.as_str(),
                         flows_user,
                         flow_id,
                         database.as_ref(),

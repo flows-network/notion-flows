@@ -23,7 +23,6 @@ mod state;
 static STATIC_DIR: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/static");
 
 const POLLING_INTERVAL_SECS: i64 = 60;
-const POST_INTERVAL_SECS: u64 = 1;
 
 lazy_static::lazy_static! {
     static ref HOOK_URL: String =
@@ -38,7 +37,7 @@ async fn main() {
     let state = init().await;
 
     let app = Router::new()
-        .route("/:flows_user/:flow_id/listen", post(listen))
+        .route("/:flows_user/:flow_id/listen", get(listen))
         .route("/:flows_user/:flow_id/revoke", post(revoke))
         .route("/event/:database", get(event))
         .route("/connected/:flows_user", get(connected))

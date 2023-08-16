@@ -42,7 +42,7 @@ pub mod notion {
 pub mod database {
     use serde::Deserialize;
 
-    #[derive(Deserialize, sqlx::FromRow)]
+    #[derive(Debug, Deserialize, sqlx::FromRow)]
     pub struct Flow {
         pub flows_user: String,
         pub flow_id: String,
