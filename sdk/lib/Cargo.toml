@@ -1,0 +1,18 @@
+[package]
+name = "notion-flows"
+version = "0.2.0"
+edition = "2021"
+license = "MIT/Apache-2.0"
+description = "Notion extension for flows.network"
+documentation = "https://docs.rs/notion-flows"
+readme = "README.md"
+
+[package.metadata.docs.rs]
+default-target = "wasm32-wasi"
+
+[dependencies]
+http_req_wasi = "0.11.1"
+lazy_static = "1"
+notion-wasi = "0.5.1"
+serde_json = "1.0.99"
+notion-flows-macros = { version = "0.1", path = "../macros" }

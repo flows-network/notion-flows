@@ -46,6 +46,7 @@ pub mod database {
     pub struct Flow {
         pub flows_user: String,
         pub flow_id: String,
+        pub handler_fn: Option<String>,
     }
 
     #[derive(Deserialize)]
@@ -76,5 +77,6 @@ pub mod database {
     #[derive(Deserialize)]
     pub struct ListenerQuery {
         pub database: String,
+        pub handler_fn: Option<String>,
     }
 }

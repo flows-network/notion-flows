@@ -3,8 +3,8 @@
 
 **/target/
 
-./notion-integration/Cargo.lock
-
 **/.cargo/
 
 **/build.rs
+
+**/Cargo.lock

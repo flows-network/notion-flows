@@ -10,9 +10,13 @@ pub async fn revoke(
     Path(Flow {
         flows_user,
         flow_id,
+        handler_fn: _,
     }): Path<Flow>,
     State(AppState { pool }): State<AppState>,
-    Query(ListenerQuery { database }): Query<ListenerQuery>,
+    Query(ListenerQuery {
+        database,
+        handler_fn: _,
+    }): Query<ListenerQuery>,
 ) -> Result<StatusCode, String> {
     let sql = "
         DELETE FROM listener

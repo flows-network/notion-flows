@@ -13,7 +13,7 @@ pub async fn event(
     let mut flows = Vec::new();
 
     let sql = "
-        SELECT flows_user, flow_id FROM listener
+        SELECT flows_user, flow_id, handler_fn FROM listener
         WHERE database = $1
     ";
     let fs: Vec<Flow> = sqlx::query_as(sql)
@@ -25,11 +25,13 @@ pub async fn event(
     for Flow {
         flows_user,
         flow_id,
+        handler_fn,
     } in fs
     {
         flows.push(serde_json::json!({
             "flows_user": flows_user,
             "flow_id": flow_id,
+            "handler_fn": handler_fn,
         }));
     }
 
